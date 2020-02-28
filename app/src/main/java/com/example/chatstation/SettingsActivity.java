@@ -55,6 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
     private StorageReference UserProfileImageRef;
     private ProgressDialog loadingbar;
     private SignInButton.ButtonSize;
+    private String userid;
 
     public static int galaryPick=1;
    //  private Uri imageUri;
