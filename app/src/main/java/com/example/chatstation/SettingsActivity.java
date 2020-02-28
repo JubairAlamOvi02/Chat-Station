@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -53,6 +54,7 @@ public class SettingsActivity extends AppCompatActivity {
     private DatabaseReference RootRef;
     private StorageReference UserProfileImageRef;
     private ProgressDialog loadingbar;
+    private SignInButton.ButtonSize;
 
     public static int galaryPick=1;
    //  private Uri imageUri;
