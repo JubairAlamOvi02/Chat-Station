@@ -54,7 +54,7 @@ public class SettingsActivity extends AppCompatActivity {
     private DatabaseReference RootRef;
     private StorageReference UserProfileImageRef;
     private ProgressDialog loadingbar;
-    
+
 
     public static int galaryPick=1;
    //  private Uri imageUri;
@@ -138,6 +138,53 @@ public class SettingsActivity extends AppCompatActivity {
 
                 final StorageReference filePath=UserProfileImageRef.child(currentUserId +"image.jpg");
                 Task uploadTask =filePath.putFile(imageUri);
+                uploadTask.continueWithTask(new Continuation() {
+                    @Override
+                    public Object then(@NonNull Task task) throws Exception {
+                        if (task.isSuccessful()){
+                            throw task.getException();
+                        }
+                        return filePath.getDownloadUrl();
+                    }
+                })
+                        .addOnCompleteListener(new OnCompleteListener() {
+                            @Override
+                            public void onComplete(@NonNull Task task) {
+                                if (task.isSuccessful()){
+                                    Uri downloadUri=(Uri)task.getResult();
+                                    String download=downloadUri.toString();
+
+                                    RootRef.child("Users").child(currentUserId).child("image")
+                                            .setValue(download)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(SettingsActivity.this, "Image save in database successfully", Toast.LENGTH_SHORT).show();
+
+                                                    } else {
+
+                                                        String message = task.getException().toString();
+                                                        Toast.makeText(SettingsActivity.this, "Error" + message, Toast.LENGTH_SHORT).show();
+                                                        loadingbar.dismiss();
+
+                                                    }
+                                                }
+                                            });
+                                }
+
+                            }
+                        });
+
+            }
+
+        }
+
+
+
+
+    }
+
 
     private void UpdateSettings() {
         String SetUserName=userName.getText().toString();
