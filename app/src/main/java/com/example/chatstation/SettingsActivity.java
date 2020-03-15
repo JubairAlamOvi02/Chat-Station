@@ -47,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
     private StorageReference UserProfileImageRef;
     private ProgressDialog loadingbar;
     private Uri ImageUri;
-   // private  String ProductRandomKey;
+    private  String ProductRandomKey;
    private String productRandomKey, downloadImageUrl;
     private ProgressDialog loadingBar;
 
