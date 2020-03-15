@@ -1,39 +1,35 @@
 package com.example.chatstation;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.SignInButton;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -42,22 +38,33 @@ public class SettingsActivity extends AppCompatActivity {
     private CircleImageView userProfileImage;
     private Button userAccountSettings;
     private EditText userName,userStatus;
+    private ImageView imageView,UserImage;
 
 
-
-
-
-
-
-    private String currentUserId;
+    private String currentUserId,saveCurrentDate, saveCurrentTime,userNameP,userStatusP;
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
     private StorageReference UserProfileImageRef;
     private ProgressDialog loadingbar;
+    private Uri ImageUri;
+   // private  String ProductRandomKey;
+   private String productRandomKey, downloadImageUrl;
+    private ProgressDialog loadingBar;
 
 
-    public static int galaryPick=1;
+
+    private static final int GalleryPick=1;
    //  private Uri imageUri;
+
+    private void InitializeFields() {
+        userAccountSettings=findViewById(R.id.update_settings_button);
+        userName=findViewById(R.id.set_User_Name);
+        userStatus=findViewById(R.id.set_profile_status);
+        userProfileImage=findViewById(R.id.set_profile_image);
+        loadingbar=new ProgressDialog(this);
+        UserImage=findViewById(R.id.set_user_image);
+
+    }
 
 
 
@@ -80,18 +87,29 @@ public class SettingsActivity extends AppCompatActivity {
         userAccountSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UpdateSettings();
+               // UpdateSettings();
+
+                StoreProductInformation();
             }
         });
-        RetriveUserInfo();
+        //RetriveUserInfo();
+        SaveProductInfoToDatabase();
 
-        userProfileImage.setOnClickListener(new View.OnClickListener() {
+        /*userProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent galaryIntent=new Intent();
                 galaryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 galaryIntent.setType("image/*");
-                startActivityForResult(galaryIntent,galaryPick);
+                startActivityForResult(galaryIntent,GalleryPick);
+            }
+        });*/
+
+        UserImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                opengallery();
+                ValidateProductData();
             }
         });
 
@@ -100,21 +118,154 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-
-
-
-    private void InitializeFields() {
-        userAccountSettings=findViewById(R.id.update_settings_button);
-        userName=findViewById(R.id.set_User_Name);
-        userStatus=findViewById(R.id.set_profile_status);
-        userProfileImage=findViewById(R.id.set_profile_image);
-        loadingbar=new ProgressDialog(this);
-
+    private void opengallery() {
+        Intent galleryIntent=new Intent();
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent,GalleryPick);
     }
 
-
-
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==GalleryPick  &&  resultCode==RESULT_OK  &&  data!=null)
+        {
+            ImageUri = data.getData();
+            UserImage.setImageURI(ImageUri);
+        }
+    }
+
+    private void ValidateProductData()
+    {
+
+        if (ImageUri == null)
+        {
+            Toast.makeText(this, "Product image is mandatory...", Toast.LENGTH_SHORT).show();
+        }
+
+        else
+        {
+            StoreProductInformation();
+        }
+    }
+
+    private void StoreProductInformation()
+    {
+        loadingbar.setTitle("Set profile image");
+        loadingbar.setMessage("Please wait until your image is updating");
+        loadingbar.setCanceledOnTouchOutside(false);
+        loadingbar.show();
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
+
+        productRandomKey = saveCurrentDate + saveCurrentTime;
+
+
+        final StorageReference filePath = UserProfileImageRef.child(ImageUri.getLastPathSegment() + productRandomKey + ".jpg");
+
+        final UploadTask uploadTask = filePath.putFile(ImageUri);
+
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                String message = e.toString();
+                Toast.makeText(SettingsActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                loadingBar.dismiss();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+            {
+                Toast.makeText(SettingsActivity.this, "Product Image uploaded Successfully...", Toast.LENGTH_SHORT).show();
+
+                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception
+                    {
+                        if (!task.isSuccessful())
+                        {
+                            throw task.getException();
+                        }
+
+                        downloadImageUrl = filePath.getDownloadUrl().toString();
+                        return filePath.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                            downloadImageUrl = task.getResult().toString();
+
+                            Toast.makeText(SettingsActivity.this, "got the Product image Url Successfully...", Toast.LENGTH_SHORT).show();
+
+                            SaveProductInfoToDatabase();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void SaveProductInfoToDatabase()
+    {
+       /* HashMap<String, Object> productMap = new HashMap<>();
+        productMap.put("pid", productRandomKey);
+        productMap.put("date", saveCurrentDate);
+        productMap.put("time", saveCurrentTime);
+        productMap.put("description", Description);
+        productMap.put("image", downloadImageUrl);
+        productMap.put("category", CategoryName);
+        productMap.put("price", Price);
+        productMap.put("pname", Pname);*/
+
+        HashMap<String,Object> profileMap=new  HashMap<>();
+        profileMap.put("uid",currentUserId);
+        profileMap.put("name",userNameP);
+        profileMap.put("status",userStatusP);
+        profileMap.put("image", downloadImageUrl);
+
+        RootRef.child(productRandomKey).updateChildren(profileMap)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                            Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+                            startActivity(intent);
+
+                            loadingBar.dismiss();
+                            Toast.makeText(SettingsActivity.this, "Product is added successfully..", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            loadingBar.dismiss();
+                            String message = task.getException().toString();
+                            Toast.makeText(SettingsActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+}
+
+
+
+
+/*
+}
+
+    */
+/* @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==galaryPick && resultCode==RESULT_OK && data!=null){
@@ -183,7 +334,10 @@ public class SettingsActivity extends AppCompatActivity {
 
 
 
+
     }
+
+*//*
 
 
     private void UpdateSettings() {
@@ -262,10 +416,12 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     private void sendUsertoMainActivity() {
-        Intent mainIntent=new Intent(SettingsActivity.this,MainActivity.class);
-        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Intent mainIntent = new Intent(SettingsActivity.this, MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
         finish();
     }
 
-}
+
+
+*/
