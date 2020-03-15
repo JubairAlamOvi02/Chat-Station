@@ -35,8 +35,6 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
 
 
-
-
 }
 dependencies {
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
@@ -44,4 +42,22 @@ dependencies {
 
 apply plugin: 'com.google.gms.google-services'
 
+dependencies {
+    implementation 'androidx.appcompat:appcompat:+'
+    implementation 'androidx.constraintlayout:constraintlayout:+'
+}
 
+dependencies {
+    implementation 'androidx.appcompat:appcompat:+'
+    implementation 'androidx.constraintlayout:constraintlayout:+'
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:+'
+    implementation 'androidx.constraintlayout:constraintlayout:+'
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:+'
+    implementation 'androidx.constraintlayout:constraintlayout:+'
+}
