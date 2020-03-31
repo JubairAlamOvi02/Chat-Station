@@ -7,7 +7,7 @@
     tools:context=".SettingsActivity">
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
+   <!-- <de.hdodenhof.circleimageview.CircleImageView
 
         android:id="@+id/set_profile_image"
         android:layout_width="250dp"
@@ -18,75 +18,98 @@
         android:src="@drawable/profile_image"
         app:civ_border_width="5dp"
         app:civ_border_color="@color/colorPrimary"
-        />
+        />-->
+
+
     <ImageView
         android:id="@+id/set_user_image"
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="34dp"
         android:src="@drawable/profile_image"
 
-        />
+        android:contentDescription="@string/todo" />
 
+    <Button
+        android:id="@+id/pic_change_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/set_user_image"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/buttons"
+        android:inputType="textMultiLine"
+        android:padding="5dp"
+        android:text="@string/change_photo"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@android:color/background_light"
+        android:textSize="20sp"
+        android:textStyle="bold"
+
+        tools:ignore="TextViewEdits" />
 
     <EditText
         android:id="@+id/set_User_Name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/set_profile_image"
-        android:inputType="textMultiLine"
-        android:hint="Edit"
-        android:textAlignment="center"
+        android:layout_below="@+id/pic_change_button"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/inputs"
         android:drawableStart="@drawable/edit_profile"
+        android:hint="@string/edit"
+        android:inputType="textMultiLine"
+        android:padding="5dp"
+        android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
         android:textStyle="bold"
-        android:background="@drawable/inputs"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:padding="5dp"
-        android:layout_marginTop="10dp"
 
-        />
+
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/set_profile_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/set_User_Name"
-        android:inputType="textMultiLine"
-        android:hint="I am available now"
-        android:textAlignment="center"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/inputs"
         android:drawableStart="@drawable/edit_status"
+        android:hint="@string/i_am_available_now"
+        android:inputType="textMultiLine"
+        android:padding="5dp"
+        android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
         android:textStyle="bold"
-        android:background="@drawable/inputs"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:padding="5dp"
-        android:layout_marginTop="10dp"
 
-        />
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/update_settings_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/set_profile_status"
-        android:inputType="textMultiLine"
-        android:text="Update"
-        android:textAlignment="center"
-        android:background="@drawable/buttons"
-        android:textColor="@android:color/background_light"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:textAllCaps="false"
         android:layout_marginStart="15dp"
+        android:layout_marginTop="27dp"
         android:layout_marginEnd="15dp"
+        android:background="@drawable/buttons"
+        android:inputType="textMultiLine"
         android:padding="5dp"
-        android:layout_marginTop="10dp"
+        android:text="@string/update"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@android:color/background_light"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:ignore="TextViewEdits" />
 
-        />
+
 
 </RelativeLayout>

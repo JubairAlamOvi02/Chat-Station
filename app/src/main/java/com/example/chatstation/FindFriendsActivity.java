@@ -7,8 +7,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 
 public class FindFriendsActivity extends AppCompatActivity {
@@ -16,6 +16,8 @@ public class FindFriendsActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private RecyclerView FindFriendsRecyclerList;
     private DatabaseReference UsersRef;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +28,8 @@ public class FindFriendsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_find_friends);
 
 
-        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-
-
+        /*UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+*/
         FindFriendsRecyclerList = (RecyclerView) findViewById(R.id.find_friends_recycler_list);
         FindFriendsRecyclerList.setLayoutManager(new LinearLayoutManager(this));
 

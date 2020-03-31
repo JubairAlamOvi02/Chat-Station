@@ -3,4 +3,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="edit">Edit</string>
+    <string name="update">Update</string>
+    <string name="i_am_available_now">I am available now</string>
+    <string name="change_photo">Change Photo</string>
+    <string name="todo">TODO</string>
 </resources>
