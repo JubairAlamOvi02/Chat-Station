@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,7 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingsActivity extends AppCompatActivity {
     private CircleImageView userProfileImage;
-    private Button UpdateAccountSettings, photoChange;
+    private Button UpdateAccountSettings, photoChange,openGallerybtn;
     private EditText userName, userStatus;
     private ImageView  userImage;
 
@@ -65,6 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
         loadingbar = new ProgressDialog(this);
         userImage = findViewById(R.id.set_user_image);
         photoChange = findViewById(R.id.pic_change_button);
+        openGallerybtn=findViewById(R.id.update_pic_button);
 
     }
 
@@ -95,7 +97,7 @@ public class SettingsActivity extends AppCompatActivity {
         //RetriveUserInfo();
         *//*SaveProductInfoToDatabase();*//*
 */
-        userImage.setOnClickListener(new View.OnClickListener() {
+        openGallerybtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openGallery();
@@ -169,7 +171,7 @@ public class SettingsActivity extends AppCompatActivity {
         imageRandomKey = saveCurrentDate + saveCurrentTime;
 
 
-        final StorageReference filePath = UserProfileImageRef.child(ImageUri.getLastPathSegment() + imageRandomKey + ".jpg");
+        final StorageReference filePath = UserProfileImageRef.child(ImageUri.getLastPathSegment() + currentUserId + ".jpg");
 
         final UploadTask uploadTask = filePath.putFile(ImageUri);
 
@@ -193,6 +195,7 @@ public class SettingsActivity extends AppCompatActivity {
                         }
 
                         downloadImageUrl = filePath.getDownloadUrl().toString();
+
                         return filePath.getDownloadUrl();
                     }
                 }).addOnCompleteListener(new OnCompleteListener<Uri>() {
@@ -201,8 +204,10 @@ public class SettingsActivity extends AppCompatActivity {
                         if (task.isSuccessful())
                         {
                             downloadImageUrl = task.getResult().toString();
+                            Picasso.get().load(downloadImageUrl).into(userImage);
 
-                            Toast.makeText(SettingsActivity.this, "got the Product image Url Successfully...", Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(SettingsActivity.this, "got the  image Url Successfully...", Toast.LENGTH_SHORT).show();
 
                             SaveImageInfoToDatabase();
                         }
@@ -216,23 +221,28 @@ public class SettingsActivity extends AppCompatActivity {
     }
     private void SaveImageInfoToDatabase() {
         HashMap<String, Object> imageMap = new HashMap<>();
-        imageMap.put("pid", imageRandomKey);
+        imageMap.put("pid", currentUserId);
         imageMap.put("date", saveCurrentDate);
         imageMap.put("time", saveCurrentTime);
         imageMap.put("image", downloadImageUrl);
 
-        RootRef.child(imageRandomKey).updateChildren(imageMap)
+        RootRef.child("Users").child(currentUserId).updateChildren(imageMap)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
 
                         if (task.isSuccessful())
                         {
-                            Intent intent = new Intent(SettingsActivity.this,MainActivity.class);
+                            /*Intent intent = new Intent(SettingsActivity.this,MainActivity.class);
                             startActivity(intent);
 
+*/
+
+
                             loadingbar.dismiss();
+
                             Toast.makeText(SettingsActivity.this, "Image is added successfully.", Toast.LENGTH_SHORT).show();
+
 
                            //Toast.makeText(SettingsActivity.this, "Image is added successfully..", Toast.LENGTH_SHORT).show();
                         }
