@@ -180,9 +180,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendUserToSettingsActivity(){
         Intent settingsIntent=new Intent(MainActivity.this,SettingsActivity.class);
-        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        //settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(settingsIntent);
-        finish();
+
     }
 
     private void SendUserToFindFriendsActivity()
