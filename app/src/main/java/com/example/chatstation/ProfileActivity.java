@@ -23,7 +23,6 @@ import java.util.HashMap;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
-
     private String receiverUserID, senderUserID, Current_State;
 
     private CircleImageView userProfileImage;
@@ -373,3 +372,6 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 }
+
+
+

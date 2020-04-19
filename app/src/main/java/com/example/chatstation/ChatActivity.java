@@ -38,13 +38,6 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatActivity extends AppCompatActivity {
-
-   /* @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
-    }*/
-
     private String messageReceiverID, messageReceiverName, messageReceiverImage, messageSenderID;
 
     private TextView userName, userLastSeen;
@@ -273,5 +266,8 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 }
+
+
+
 
 

@@ -29,21 +29,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChatFragment extends Fragment {
-
-
-   /* public ChatFragment() {
-        // Required empty public constructor
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chat, container, false);
-    }*/
-
+public class ChatFragment extends Fragment
+{
     private View PrivateChatsView;
     private RecyclerView chatsList;
 
@@ -189,6 +176,5 @@ public class ChatFragment extends Fragment {
         }
     }
 }
-
 
 
