@@ -74,7 +74,28 @@ public class MainActivity extends AppCompatActivity {
             sendUserToLoginActivity();
         }
         else{
+
+            updateUserStatus("online");
             verifyUserExistance();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (currentUser != null)
+        {
+            updateUserStatus("offline");
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (currentUser != null)
+        {
+            updateUserStatus("offline");
         }
     }
 
@@ -215,10 +236,13 @@ public class MainActivity extends AppCompatActivity {
         onlineStateMap.put("date", saveCurrentDate);
         onlineStateMap.put("state", state);
 
+        currentUserID=mAuth.getCurrentUser().getUid();
 
         RootRef.child("Users").child(currentUserID).child("userState")
                 .updateChildren(onlineStateMap);
 
     }
+
+
 
 }
